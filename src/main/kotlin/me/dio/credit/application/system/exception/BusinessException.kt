@@ -1,5 +1,3 @@
 package me.dio.credit.application.system.exception
 
-class BussinessException(s: String) : RuntimeException() {
-
-}
+class BusinessException(s: String) : RuntimeException(s)
