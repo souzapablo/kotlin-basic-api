@@ -2,6 +2,7 @@ package me.dio.credit.application.system.controller
 
 import com.electronwill.nightconfig.core.conversion.Path
 import me.dio.credit.application.system.dto.CustomerDto
+import me.dio.credit.application.system.dto.CustomerUpdateDto
 import me.dio.credit.application.system.dto.CustomerView
 import me.dio.credit.application.system.entity.Customer
 import me.dio.credit.application.system.service.impl.CustomerService
@@ -26,4 +27,13 @@ class CustomerController(
 
     @DeleteMapping("/{id}")
     fun deleteCustomer(@PathVariable id: Long) = this.customerService.delete(id)
+
+    @PatchMapping
+    fun updateCustomer(@RequestParam(value = "customerId") id: Long,
+                       @RequestBody customerUpdateDto: CustomerUpdateDto): CustomerView {
+        val customer: Customer = this.customerService.findById(id)
+        val customerToUpdate: Customer = customerUpdateDto.toEntity(customer)
+        val updatedCustomer: Customer = this.customerService.save(customerToUpdate)
+        return CustomerView(updatedCustomer)
+    }
 }
