@@ -4,7 +4,7 @@ import me.dio.credit.application.system.entity.Credit
 import java.math.BigDecimal
 import java.util.*
 
-class CreditViewList(
+class CreditListView(
     val creditCode: UUID,
     val creditValue: BigDecimal,
     val numberOfInstallments: Int
