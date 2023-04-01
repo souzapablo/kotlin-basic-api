@@ -15,7 +15,7 @@ class CustomerView(
     constructor(customer: Customer): this(
         firstName = customer.firstName,
         lastName = customer.lastName,
-        cpf = customer.lastName,
+        cpf = customer.cpf,
         income = customer.income,
         email = customer.email,
         zipCode = customer.address.zipCode,
