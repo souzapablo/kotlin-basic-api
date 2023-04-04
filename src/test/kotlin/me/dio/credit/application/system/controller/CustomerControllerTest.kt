@@ -45,15 +45,17 @@ class CustomerControllerTest {
     fun tearDown() = customerRepository.deleteAll()
 
     @Test
-    fun `should create a customer and return 201 status`() {
+    fun `should create a customer and return status 201`() {
         //given
         val customerDto: CustomerDto = buildCustomerDto()
         val valueAsString: String = objectMapper.writeValueAsString(customerDto)
         //when
         //then
-        mockMvc.perform(MockMvcRequestBuilders.post(URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(valueAsString))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(valueAsString)
+        )
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Pablo"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Souza"))
@@ -64,6 +66,42 @@ class CustomerControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.income").value(33.0))
             .andDo(MockMvcResultHandlers.print())
     }
+
+    @Test
+    fun `should not create customer with already registered CPF and return status 409`() {
+        //given
+        customerRepository.save(buildCustomerDto().toEntity())
+        val customerDto: CustomerDto = buildCustomerDto()
+        val valueAsString: String = objectMapper.writeValueAsString(customerDto)
+        //when
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(valueAsString)
+        )
+            .andExpect(MockMvcResultMatchers.status().isConflict)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Conflict: consult the documentation"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun `should not create customer with empty first name and return status 400`() {
+        //given
+        val customerDto: CustomerDto = buildCustomerDto(firstName = "")
+        val valueAsString: String = objectMapper.writeValueAsString(customerDto)
+        //when
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(valueAsString)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request: consult the documentation"))
+            .andDo(MockMvcResultHandlers.print())
+    }
+
 
     private fun buildCustomerDto(
         firstName: String = "Pablo",
