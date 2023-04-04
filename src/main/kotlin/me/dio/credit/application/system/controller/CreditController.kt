@@ -18,10 +18,10 @@ class CreditController(
     private val creditService: CreditService
 ) {
     @PostMapping
-    fun saveCredit(@RequestBody @Valid creditDto: CreditDto): ResponseEntity<String> {
+    fun saveCredit(@RequestBody @Valid creditDto: CreditDto): ResponseEntity<CreditView> {
         val credit: Credit = this.creditService.save(creditDto.toEntity())
-        return ResponseEntity.status(HttpStatus.OK)
-            .body("Credit ${credit.creditCode} - Customer ${credit.customer?.firstName} saved!")
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(CreditView(credit))
     }
 
     @GetMapping
