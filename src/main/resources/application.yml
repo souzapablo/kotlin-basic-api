@@ -5,8 +5,7 @@ spring:
     password: flamengo
   jpa:
     show-sql: true
-    hibernate:
-      properties:
+    properties:
         hibernate.format_sql: true
   h2:
     console:
@@ -15,3 +14,6 @@ spring:
       settings:
         trace: false
         web-allow-others: false
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
