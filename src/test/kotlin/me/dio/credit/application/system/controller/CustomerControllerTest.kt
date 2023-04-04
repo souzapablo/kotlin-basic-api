@@ -3,7 +3,6 @@ package me.dio.credit.application.system.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.dio.credit.application.system.dto.CustomerDto
 import me.dio.credit.application.system.dto.CustomerUpdateDto
-import me.dio.credit.application.system.entity.Address
 import me.dio.credit.application.system.entity.Customer
 import me.dio.credit.application.system.repository.CustomerRepository
 import org.junit.jupiter.api.AfterEach
@@ -127,7 +126,7 @@ class CustomerControllerTest {
     @Test
     fun `should not find customer by invalid id and return `() {
         //given
-        val invalidId: Long = 2L
+        val invalidId = 2L
         //when
         //then
         mockMvc.perform(
@@ -156,7 +155,7 @@ class CustomerControllerTest {
     @Test
     fun `should not delete invalid customer and return status 400`() {
         //given
-        val id: Long = 2L
+        val id = 2L
         //when
         //then
         mockMvc.perform(
@@ -195,9 +194,10 @@ class CustomerControllerTest {
     @Test
     fun `should not update invalid customer and return status 400`() {
         //given
-        val customerId: Long = 1L;
+        val customerId = 1L
         val updateCustomerDto: CustomerUpdateDto = buildCustomerUpdateDto()
-        val valueAsString: String = objectMapper.writeValueAsString(updateCustomerDto) //when
+        val valueAsString: String = objectMapper.writeValueAsString(updateCustomerDto)
+        //when
         //then
         mockMvc.perform(
             MockMvcRequestBuilders.patch("${URL}?customerId=${customerId}")
@@ -208,6 +208,7 @@ class CustomerControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request: consult the documentation"))
             .andDo(MockMvcResultHandlers.print())
     }
+
     private fun buildCustomerDto(
         firstName: String = "Pablo",
         lastName: String = "Souza",
