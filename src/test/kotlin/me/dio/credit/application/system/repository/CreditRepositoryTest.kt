@@ -26,22 +26,36 @@ class CreditRepositoryTest {
     lateinit var testEntityManager: TestEntityManager
 
     private lateinit var customer: Customer
-    private lateinit var credit: Credit
+    private lateinit var customer2: Customer
+    private lateinit var firstCredit: Credit
+    private lateinit var secondCredit: Credit
 
     @BeforeEach
     fun setup() {
         customer = testEntityManager.persist(buildCustomer())
-        credit = testEntityManager.persist(buildCredit(customer = customer))
+        firstCredit = testEntityManager.persist(buildCredit(customer = customer))
+        secondCredit = testEntityManager.persist(buildCredit(customer = customer))
     }
 
     @Test
     fun `should find credit by credit code`() {
         //given
         //when
-        val sut = creditRepository.findByCreditCode(credit.creditCode)
+        val sut = creditRepository.findByCreditCode(firstCredit.creditCode)
         //then
         Assertions.assertThat(sut).isNotNull
-        Assertions.assertThat(sut).isEqualTo(credit)
+        Assertions.assertThat(sut).isEqualTo(firstCredit)
+    }
+
+    @Test
+    fun `should find all credits by customer id`() {
+        //given
+        //when
+        val sut = creditRepository.findAllByCustomer(customer.id!!)
+        //then
+        Assertions.assertThat(sut).isNotEmpty
+        Assertions.assertThat(sut.size).isEqualTo(2)
+        Assertions.assertThat(sut).contains(firstCredit, secondCredit)
     }
 
     private fun buildCredit(
